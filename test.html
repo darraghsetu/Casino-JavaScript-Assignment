@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Page Title</title>
+<body>
+<p id="dealer">Dealer Total: 11 or 21 (Cards: A + 10)</p>
+<p id="player">Player Total: 17 (Cards: A + 6)</p>
+<button id="hit">Hit</button>
+<button id="stick">Stick</button>
+<button id="double">Double</button>
+
+<script>
+	let deck = [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11 ];
+	
+	function knuth_shuffle( array ){
+		let n = array.length;
+		let randomIndex;
+		
+		while( n > 1 ){
+			randomIndex = Math.floor(n * Math.random());
+			n--;
+			[array[n], array[randomIndex]] = [array[randomIndex], array[n]];
+		}
+		
+		return array;
+	}
+	
+	deck = knuth_shuffle( deck );
+	
+	let dealerText = document.querySelector( "#dealer" );
+	let playerText = document.querySelector( "#player" );
+	let dealer;
+	let player;
+	let dealerHand = [];
+	let playerHand = [];
+	let playerDone = false;
+	let playerTotal;
+	let dealerTotal;
+	let playerMax;
+	let dealerMax;
+	let done = false;
+	let result = "";
+
+	nextCard( dealerHand );
+	nextCard( playerHand );
+	nextCard( playerHand );
+	
+	function nextCard( hand ){
+		hand.push( deck.shift( ) );
+		updateHands( );
+	}
+	
+	function outputHand( hand ){
+		let string = "";
+		
+		for( card of hand ){
+			if( card == 11 ){
+				string += "A "
+			} else{
+				string += card + " ";
+			}
+		}
+		
+		return string;
+	}
+	
+	function calcTotal( hand ){
+		let total = [0, 0];
+		
+		let aceCount = hand.filter( e => e == 11 ).length;
+		
+		if( aceCount == 1 ){
+			total[0] += 1;
+			total[1] += 11;
+		} else if( aceCount > 1 ){
+			total[0] += aceCount;
+			total[1] += 11 + (aceCount - 1);
+		}
+		
+		for( card of hand ){
+			if( card != 11 ){
+				total[0] += card;
+				
+				if( aceCount != 0 ){
+					total[1] += card;
+				}
+			}
+		}
+		
+		if( total[1] > 21 ){
+			total[1] = 0;
+		} else if( total[1] === 21 ){
+			total[0] = 0;
+		}
+		
+		return total;
+	}
+	
+	function outputTotal( hand ){
+		let total = calcTotal( hand );
+		let string = "";
+		
+		if( total[0] !== 0 ){
+			string += total[0];
+			
+			if( total[1] != 0 ){
+				string += " or " + total[1];
+			}
+		} else{
+			string = total[1];
+		}
+		
+		return string;
+	}
+	
+	function updateHands( ){
+		updateTotals( );
+		updateStrings( );
+		dealerText.innerHTML = dealer;
+		playerText.innerHTML = player;
+	}
+	
+	function updateTotals( ){
+		playerTotal = calcTotal( playerHand );
+		dealerTotal = calcTotal( dealerHand );
+	}
+	
+	function updateStrings( ){
+		updatePlayerString( );
+		updateDealerString( );
+	}
+	
+	function getMaxes( ){
+		dealerMax = dealerTotal[0] > dealerTotal[1] ? dealerTotal[0] : dealerTotal[1];
+		playerMax = playerTotal[0] > playerTotal[1] ? playerTotal[0] : playerTotal[1];
+	}
+	
+	function updatePlayerString( ){
+		player = `Player Total: ${outputTotal( playerHand )} (Cards: ${outputHand( playerHand )})`;
+	}
+	
+	function updateDealerString( ){
+		dealer = `Dealer Total: ${outputTotal( dealerHand )} (Cards: ${outputHand( dealerHand )})`;
+	}
+	
+	function eval( ){
+		if( playerTotal[0] > 21 ){
+			done = true;
+			result = "Player has bust";
+		}else if( playerDone ){
+			nextCard( dealerHand );
+			
+			if( dealerTotal[1] == 21 ){
+				done = true;
+				result = "Dealer has blackjack";
+				
+				
+				
+				
+			}else{
+				console.log( dealerTotal );
+				while( dealerTotal[0] < 17 && ( dealerTotal[1] < 17 || dealerTotal[1] === 0 )  ){
+					nextCard( dealerHand );
+				}
+				
+				getMaxes( );
+				
+				if( dealerMax <= 21 ){
+					if( dealerMax > playerMax ){
+						done = true;
+						result = "Dealer wins";
+					} else if( playerMax > dealerMax ){
+						done = true;
+						result = "Player wins";
+					} else{
+						done = true;
+						result = "Push";
+					}
+				} else{
+					done = true;
+					result = "Dealer has bust";
+				}
+			}
+		}
+		
+		if( done ){
+			let resultP = document.createElement( "p" );
+			resultP.innerText = result;
+			document.body.append( resultP );
+		}
+	}
+	
+	let hitButton = document.querySelector( "#hit" );
+	let stickButton = document.querySelector( "#stick" );
+	let doubleButton = document.querySelector( "#double" );
+	
+	console.log( playerTotal );
+	
+	if( playerTotal[1] === 21 ){
+		let p = document.createElement( "p" );
+		p.innerText = "Player has blackjack";
+		document.body.append( p );
+	
+		
+		nextCard( dealerHand );
+		
+		if( dealerTotal[1] === 21 ){
+			let p2 = document.createElement( "p" );
+			p2.innerText = "Dealer has blackjack";
+			document.body.append( p2 );
+		
+			result.innerText = "Push";
+		} else{
+			result.innerText = "Player wins";
+		}
+		
+		document.body.append( result );
+	}
+	
+	hitButton.addEventListener( "click", e => {
+		nextCard( playerHand );
+		doubleButton.disabled = true;
+		eval( );
+	});
+	
+	stickButton.addEventListener( "click", e => {
+		playerDone = true;
+		eval( );
+	});
+	
+	doubleButton.addEventListener( "click", e => {
+		nextCard( playerHand );
+		playerDone = true;
+		eval( );
+	});
+	
+</script>
+
+</body>
+</html>

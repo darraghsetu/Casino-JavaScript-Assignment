@@ -1,0 +1,140 @@
+.red-error-text{
+	color: red;
+}
+
+.hidden{
+	display: none !important;
+}
+
+.inline-p{
+	display: inline;
+}
+
+.testing{
+	margin: auto;
+	width: 99%;
+}
+
+main{
+	border-left: 7px solid #033003;
+	border-right: 7px solid #033003;
+	background-color: #054505;
+}
+
+main .ui.segment, #message-box{
+	background-color: #033003;
+}
+
+#player > .ui.segment, #nav > .ui.segment, #welcome-screen > .ui.segment{
+	background-color: #303030;
+	border: 1px solid dimgrey
+}
+
+.container{
+	min-height: 100%;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+body{
+	background-color: #202020;
+}
+
+h1, h2, h3, h4, a, p, li, label{
+	color: white;
+}
+
+ul{
+	list-style: none;
+	padding-left: 10px;
+}
+
+.ui.container{
+        height: 100%;
+}
+
+/* 
+ * Not original work
+ * Credit: "Easy Flipcard Tutorial | HTML & CSS" - Coding with Russ, Youtube
+ * https://www.youtube.com/watch?v=NCLdf661ILE
+ */
+.card-container{
+	width: 120px;
+	height: 168px;
+	perspective: 750px;
+	display: inline-block;
+}
+
+.card{
+	height: 100%; 
+	width: 100%;
+	position: relative;
+	transform-style: preserve-3d;
+}
+
+#mascot{
+	transform-style: preserve-3d;
+	animation: back-and-forth 2000ms alternate infinite linear;
+}
+
+@keyframes back-and-forth{
+	0%{
+		left: 0%;
+		transform: rotateY( 0deg );
+	}
+	100%{
+		left: 85%;
+		transform: rotateY( 180deg );
+	}
+}
+
+/*
+.card-container:hover > .card {
+	animation: card-move 625ms forwards linear;
+}*/
+
+.flip {
+	animation: card-move 625ms forwards linear;
+}
+
+.unflip{
+	animation: unflip-card 625ms forwards linear;
+}
+
+.face-down,
+.face-up{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	background-size: contain;
+	backface-visibility: hidden;
+}
+
+.face-down{
+	background-image: url( "../images/cards/back.svg" );
+}
+
+.face-up{
+	transform: rotateX( 180deg );
+}
+
+@keyframes card-move{
+	25%{
+		transform: translateY(20px);
+	}
+	100%{
+		transform: rotateX( 180deg ) translateY(0);
+	}
+}
+
+@keyframes unflip-card{
+	0%{
+		transform: rotateX( -180deg ) translateY(0px);
+	}
+	25%{
+		transform: rotateX( -135deg ) translateY( -20px );
+	}
+	100%{
+		transform: rotateX( 0deg ) translateY(0px);
+	}
+}

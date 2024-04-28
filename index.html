@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+		<link rel = "stylesheet" href ="css/style.css">
+		<title>Casino Royale</title>
+	</head>
+	<body>
+		<div id="container" class="ui grid stackable container">
+
+			<div id="welcome-screen" class="six wide centered middle aligned column ">
+				<div class="ui segment">
+					<h1>Welcome to Casino Royale</h1>
+					<h4> Please enter your name and date of birth:</h4>
+					<p id="welcome-error" class="hidden red-error-text"></p>
+					<form>
+						<label for="name">Name: </label><br>
+						<input type="text" id="name" name="name" autofocus><br><br>
+						
+						<label for="dob">Date of Birth: </label><br>
+						<input type="date" id="dob" name="dob"><br><br>
+						
+						<input type="submit" id="welcome-submit" value="Submit">
+					</form>
+				</div>
+			</div>
+
+			<div id="nav" class="hidden three wide column"></div>
+			
+			<main id="board" class="hidden ten wide column">
+				<div id="intro">
+					<h1>Welcome to Darragh's Funhouse!</h1>
+					<h2>Choose a game to get started</h2>
+					<div style="margin-top: 100px"></div>
+					<img id="mascot" src="images/clown-circus.gif" width="177px" height="179.25px" class="ui image">
+				</div>
+			</main>
+			
+			<div id="player" class="hidden three wide column">
+				<div class="ui segment">
+					<h4>
+						<i class="fitted user circle icon"></i> &nbsp;
+						<span id="player-name"></span>
+					</h4>
+					
+					<p>
+						<b>Balance:</b><br>
+						<i class="fa-solid fa-coins" style="color: #FFD700"></i> &nbsp;
+						<span id="player-balance">500</span>
+					</p>
+					
+					<button id="refill-button" type="button" class="hidden ui fluid green button">
+						<i class="fitted redo alternate icon"></i> &nbsp;&nbsp;
+						Refill
+					</button>
+				</div>
+				
+				<div id="betting" class="ui segment">
+					<p> 
+						<b>Current Bet:</b><br>
+						<i class="fa-solid fa-coins" style="color: #FFD700"></i>&nbsp;
+						<span id="current-bet">0</span>
+					</p>
+					
+					<button type="button" id="five-hundered" class="ui fluid button" disabled>
+						Bet 500 &nbsp;
+						<i class="fitted purple life ring icon"></i>
+					</button><br>
+					
+					<button type="button" id="two-hundered" class="ui fluid button" disabled>
+						Bet 200 &nbsp;
+						<i class="fitted green life ring icon"></i>
+					</button><br>
+					
+					<button type="button" id="one-hundered" class="ui fluid button" disabled>
+						Bet 100 &nbsp;
+						<i class="fitted life ring icon" style="color: dodgerblue"></i>
+					</button><br>
+					
+					<button type="button" id="bet-max" class="ui fluid button" disabled>Bet Max</button><br>
+					
+					<button type="button" id="reset-bet" class="ui fluid button" disabled>Reset Bet</button><br>
+					
+					<button type="button" id="play-button" class="ui fluid green button" disabled>Play</button>
+				</div>
+				
+			</div>
+		
+			<audio id="music" loop>
+				<source src="media/entry_of_the_gladiators.mp3" type="audio/mpeg">
+			</audio>
+
+		</div>
+		
+		<!-- Templates Start -->
+		
+		<script id="how-to-template" type="text/x-handlebars-template">
+			<div id="how-to-play">
+				<h1 id="title">
+					<i id="back" class="small arrow left icon" style="color: white"></i>
+					How to play {{title}}
+				</h1>
+				<div id="{{id}}-steps" class="ui segment">
+					<h3>Steps:</h3>
+					<ol>
+						{{#each steps}}
+							<li>{{this}}</li>
+						{{/each}}
+					</ol>
+				</div>
+				<div id="{{id}}-details" class="ui segment">
+					<p><b>Betting Odds:</b>&nbsp;&nbsp; {{odds}}</p>
+					<p><b>Example:</b>&nbsp;&nbsp; {{odds-example}}</p>
+					<p><b>Cards ordered by value:</b></p>
+					<div id="shown-cards">
+					
+					
+					</div>
+					<div id="hidden-cards" class="hidden">
+					</div>
+					<br>
+					<button type="button" id="show-hidden" class="ui fluid inverted button">Show More</button>
+				</div>
+			</div>
+		</script>
+		
+		<script id="navbar-template" type="text/x-handlebars-template">
+			<div class="ui segment">
+				<h4>{{headings.[0]}}:</h4>
+				<ul>
+					{{#each links}}
+						<li><a href="{{link}}">{{text}}</a></li>
+					{{/each}}
+				</ul>
+				
+				<h4>{{headings.[1]}}:</h4>
+				<ul>
+					{{#each games}}
+						<li><a href="#">{{this}}</a></li>
+					{{/each}}
+				</ul>
+				
+				<br>
+				
+				<button id="music" type="button" class="ui fluid inverted button">
+					<i class="pause icon"></i> Pause Music
+				</button>
+			</div>
+		</script>
+
+		<script id="game-template" type="text/x-handlebars-template">
+			<div id="game">
+				<h1 id="title">{{title}}</h1>
+				<button type="button" id="how-to-play" class="ui inverted button">How to Play</button>
+				<div id="message-box" class="ui segment">
+					<p id="message">Place a bet to begin</p>
+				</div>
+				<h4>Dealer's hand:</h4>
+				<div id="dealer-hand" class="ui column center aligned segment">
+					{{#each cards}}
+						<div class="card-container">
+							<div class="card">
+								<div id="{{this}}"></div>
+								<div class="face-down">
+								</div>
+								<div class="face-up" style="background-image: url(&quot;images/cards/back.svg&quot;);">
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				</div>
+				<h4>Player's hand:</h4>
+				<div id="player-hand" class="ui column center aligned segment">
+					{{#each cards}}
+						<div class="card-container" style="display: inline-block;">
+							<div class="card">
+								<div class="face-down"></div>
+								<div class="face-up" style="background-image: url(&quot;images/cards/back.svg&quot;);"></div>
+							</div>
+						</div>
+					{{/each}}
+				</div>
+				{{#if buttons}}
+					<div id="game-buttons" class="ui {{buttonCount}} column centered middle aligned segment grid">
+						{{#each buttons}}
+							<div class="column">
+								<button type="button" id="{{id}}-button" disabled="" class="ui fluid inverted button">{{text}}</button>
+							</div>
+						{{/each}}
+					</div>
+				{{/if}}
+			</div>
+		</script>
+		
+		<!-- Templates End -->
+		
+		<script
+			src="https://code.jquery.com/jquery-3.7.1.min.js"
+			integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+			crossorigin="anonymous">
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+		<script src="js/script.js"></script>
+	</body>
+</html>
