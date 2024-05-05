@@ -264,7 +264,7 @@ const outputMainScreen = _ => {
 	board.classList.remove( "hidden" );
 	player.classList.remove( "hidden" );
 	audio.volume = 0.5;
-	//audio.play( );
+	audio.play( );
 }
 
 const outputHCScreen = _ => {
@@ -1357,13 +1357,3 @@ document.querySelector( "#welcome-submit" ).addEventListener( "click", e => {
 	}
 });
 
-player = new Player( "Darragh" );
-outputMainScreen( );
-//outputBJScreen( );
-//updateBettingBtns( );
-newPlayBtn( );
-
-document.querySelector( "#play-button" ).addEventListener( "click", e => {
-	disableBettingBtns( );
-	playBlackjack( );
-});
