@@ -1064,7 +1064,7 @@ const playBlackjack = _ => {
 	let doubleButtonCopy = doubleButton.cloneNode( );
 	doubleButtonCopy.textContent = "Double";
 	doubleButton.parentNode.replaceChild( doubleButtonCopy, doubleButton );
-	doubleButtonCopy = document.querySelector( "#double-button" );
+	doubleButton = document.querySelector( "#double-button" );
 	
 	enableButtons( );
 	document.querySelector( "#dealer-hand" ).innerHTML = "";
