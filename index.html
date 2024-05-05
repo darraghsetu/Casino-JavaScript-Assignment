@@ -32,7 +32,12 @@
 			<main id="board" class="hidden ten wide column">
 				<div id="intro">
 					<h1>Welcome to Darragh's Funhouse!</h1>
-					<h2>Choose a game to get started</h2>
+					<h2>Our current jackpot is:</h2>
+					<div style="display: flex; align-items: center">
+						<i class="fa-solid fa-coins fa-3x" style="color: #FFD700"></i>
+						<div class="js-bounty" style="color: gold; display: inline; margin-left: 20px;"></div>
+					</div>
+					<h2>Choose a game to get started!</h2>
 					<div style="margin-top: 100px"></div>
 					<img id="mascot" src="images/clown-circus.gif" width="177px" height="179.25px" class="ui image">
 				</div>
@@ -203,6 +208,8 @@
 		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+		<script src="https://unpkg.com/bounty@1.1.6/lib/bounty.js"></script>
+		<script> bounty.default({ el: ".js-bounty", value: "40,000,000" }); </script>
 		<script src="js/script.js"></script>
 	</body>
 </html>

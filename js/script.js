@@ -107,10 +107,8 @@ class Card{
 		let cardDiv = document.createElement( "div" );
 		cardDiv.classList.add( "card" );
 		
-		
 		let faceDownDiv = document.createElement( "div" );
 		faceDownDiv.classList.add( "face-down" );
-		
 		
 		let faceUpDiv = document.createElement( "div" );
 		faceUpDiv.classList.add( "face-up" );
@@ -148,9 +146,7 @@ class Deck{
 				this.#deck.push( new Card( i + this.#suits[j - 1] ) );
 			}
 		}
-		
-		this.shuffleDeck( );
-		
+
 		this.#remainingCards = this.#deck.length;
 	}
 	
@@ -203,10 +199,10 @@ class Deck{
 	
 	toBlackjack( ){
 		this.#deck.forEach( card => {
-			if( card.value === 14 ){
-				card.value = 11;
-			} else if( card.value === 11 || card.value === 12 || card.value === 13 ){
+			if( card.value === 11 || card.value === 12 || card.value === 13 ){
 				card.value = 10;
+			} else if( card.value === 14 ){
+				card.value = 11;
 			}
 		});
 	}
@@ -268,7 +264,7 @@ const outputMainScreen = _ => {
 	board.classList.remove( "hidden" );
 	player.classList.remove( "hidden" );
 	audio.volume = 0.5;
-	audio.play( );
+	//audio.play( );
 }
 
 const outputHCScreen = _ => {
@@ -1052,6 +1048,22 @@ const playBlackjack = _ => {
 		}
 	}
 	
+	let hitButtonCopy = hitButton.cloneNode( );
+	hitButtonCopy.textContent = "Hit";
+	hitButton.parentNode.replaceChild( hitButtonCopy, hitButton );
+	hitButton = document.querySelector( "#hit-button" );
+	
+	let stickButtonCopy = stickButton.cloneNode( );
+	stickButtonCopy.textContent = "Stick";
+	stickButton.parentNode.replaceChild( stickButtonCopy, stickButton );
+	stickButton = document.querySelector( "#stick-button" );
+	
+	
+	let doubleButtonCopy = doubleButton.cloneNode( );
+	doubleButtonCopy.textContent = "Double";
+	doubleButton.parentNode.replaceChild( doubleButtonCopy, doubleButton );
+	doubleButtonCopy = document.querySelector( "#double-button" );
+	
 	enableButtons( );
 	document.querySelector( "#dealer-hand" ).innerHTML = "";
 	document.querySelector( "#player-hand" ).innerHTML = "";
@@ -1345,4 +1357,13 @@ document.querySelector( "#welcome-submit" ).addEventListener( "click", e => {
 	}
 });
 
+player = new Player( "Darragh" );
+outputMainScreen( );
+//outputBJScreen( );
+//updateBettingBtns( );
+newPlayBtn( );
 
+document.querySelector( "#play-button" ).addEventListener( "click", e => {
+	disableBettingBtns( );
+	playBlackjack( );
+});
