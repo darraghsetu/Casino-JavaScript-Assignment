@@ -265,6 +265,8 @@ const outputMainScreen = _ => {
 	player.classList.remove( "hidden" );
 	audio.volume = 0.5;
 	audio.play( );
+	
+	bounty.default({ el: ".js-bounty", value: "40,000,000" });
 }
 
 const outputHCScreen = _ => {
